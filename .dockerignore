@@ -1,0 +1,10 @@
+.git
+.venv
+.env
+.DS_Store
+**/__pycache__
+**/.DS_Store
+chroma_db
+notes_gpt/data
+evals
+.devcontainer
