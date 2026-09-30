@@ -3,6 +3,7 @@ load_dotenv()
 
 import json
 import os
+import sys
 from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import faithfulness, answer_relevancy, context_precision
@@ -24,7 +25,10 @@ embeddings = LangchainEmbeddingsWrapper(
 
 answer_relevancy.strictness = 1
 
-results = json.load(open("evals/eval_results.json"))
+src = sys.argv[1] if len(sys.argv) > 1 else "evals/eval_results.json"
+dst = sys.argv[2] if len(sys.argv) > 2 else "evals/scores.json"
+
+results = json.load(open(src))
 data = Dataset.from_dict({
     "question": [r["question"] for r in results],
     "answer": [r["answer"] for r in results],
@@ -42,4 +46,4 @@ report = evaluate(
     run_config=run_config,
 )
 print(report)
-report.to_pandas().to_json("evals/scores.json", orient="records", indent=2)
+report.to_pandas().to_json(dst, orient="records", indent=2)
